@@ -29,8 +29,7 @@ class GameModel extends Model {
   }
 
   buildColorGrid(int gridSize) {
-    _gameGrid = List<List<Color>>.generate(
-        gridSize, (y) => List.generate(gridSize, (x) => _getRandomColor()));
+    _generateGameGrid(gridSize);
 
     notifyListeners();
   }
@@ -39,6 +38,13 @@ class GameModel extends Model {
     _floodFill(null, newColor, 0, 0);
 
     _currentTurn++;
+
+    notifyListeners();
+  }
+
+  restartGame() {
+    _generateGameGrid(10);
+    _currentTurn = 0;
 
     notifyListeners();
   }
@@ -61,6 +67,11 @@ class GameModel extends Model {
     _floodFill(prevColor, newColor, x, y + 1);
     _floodFill(prevColor, newColor, x - 1, y);
     _floodFill(prevColor, newColor, x, y - 1);
+  }
+
+  _generateGameGrid(int gridSize) {
+    _gameGrid = List<List<Color>>.generate(
+    gridSize, (y) => List.generate(gridSize, (x) => _getRandomColor()));
   }
 
   GameModel(int gridSize) {

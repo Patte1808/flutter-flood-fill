@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         ),
         home: ScopedModelDescendant<GameModel>(
           builder: (context, child, model) {
-            return ColorGame(model.gameGrid, model.currentTurn);
+            return ColorGame(model.gameGrid, model.currentTurn, model.availableColors, model.updateColorGrid, model.restartGame);
           },
         ),
       ),
@@ -47,8 +47,12 @@ class GridItem extends StatelessWidget {
 class ColorGame extends StatelessWidget {
   final int _currentTurn;
   final List<List<Color>> _gameGrid;
+  final List<Color> _availableColors;
+  final Function _updateColorGrid;
+  final Function _restartGame;
 
-  ColorGame(this._gameGrid, this._currentTurn);
+  ColorGame(this._gameGrid, this._currentTurn, this._availableColors,
+      this._updateColorGrid, this._restartGame);
 
   _buildColorGridRowItem(Color color) {
     return GridItem(color);
@@ -75,6 +79,12 @@ class ColorGame extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Turns: $_currentTurn"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.restore),
+            onPressed: () => this._restartGame(),
+          ),
+        ],
       ),
       body: Center(
         child: Container(
@@ -84,9 +94,7 @@ class ColorGame extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: ScopedModelDescendant<GameModel>(
-          builder: (context, child, model) =>
-              ColorPalette(model.availableColors, model.updateColorGrid)),
+      bottomNavigationBar: ColorPalette(this._availableColors, this._updateColorGrid),
     );
   }
 }
