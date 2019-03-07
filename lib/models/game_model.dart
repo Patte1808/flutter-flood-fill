@@ -29,6 +29,7 @@ class GameModel extends Model {
   int get currentTurn => _currentTurn;
 
   GameStatus _gameStatus = GameStatus.active;
+
   GameStatus get gameStatus => _gameStatus;
 
   Color _getRandomColor() {
@@ -83,7 +84,10 @@ class GameModel extends Model {
   _checkForWinningCondition() {
     var flattenList = this._gameGrid.expand((i) => i).toList();
 
-    if (flattenList.where((colorTile) => this._gameGrid[0][0].color != colorTile.color).length == 0) {
+    if (flattenList
+            .where((colorTile) => this._gameGrid[0][0].color != colorTile.color)
+            .length ==
+        0) {
       this._gameStatus = GameStatus.finished;
 
       notifyListeners();

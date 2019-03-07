@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter_flood_fill/models/game_model.dart';
-import 'widgets/color_palette.dart';
-import 'models/color_tile.dart';
+import 'screens/game_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -18,90 +17,17 @@ class MyApp extends StatelessWidget {
         ),
         home: ScopedModelDescendant<GameModel>(
           builder: (context, child, model) {
-            return ColorGame(model.gameGrid, model.currentTurn, model.availableColors, model.updateColorGrid, model.restartGame, model.gameStatus);
+            return GameScreen(
+              model.gameGrid,
+              model.currentTurn,
+              model.availableColors,
+              model.updateColorGrid,
+              model.restartGame,
+              model.gameStatus,
+            );
           },
         ),
       ),
-    );
-  }
-}
-
-class GameState extends ValueNotifier<Color> {
-  GameState(value) : super(value);
-}
-
-class GridItem extends StatelessWidget {
-  final Color color;
-
-  GridItem(this.color);
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: Duration(milliseconds: 800),
-      color: this.color,
-      height: 25.0,
-      width: 25.0,
-    );
-  }
-}
-
-class ColorGame extends StatelessWidget {
-  final int _currentTurn;
-  final List<List<ColorTile>> _gameGrid;
-  final List<Color> _availableColors;
-  final Function _updateColorGrid;
-  final Function _restartGame;
-  final GameStatus _gameStatus;
-
-  ColorGame(this._gameGrid, this._currentTurn, this._availableColors,
-      this._updateColorGrid, this._restartGame, this._gameStatus);
-
-  _buildColorGridRowItem(Color color) {
-    return GridItem(color);
-  }
-
-  _buildColorGridRow() {
-    List<Widget> grid = List.generate(_gameGrid.length, (i) {
-      List<Widget> rowItems = List.generate(
-          _gameGrid[i].length, (j) => _buildColorGridRowItem(_gameGrid[i][j].color));
-
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: rowItems,
-      );
-    });
-
-    return grid;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    List<Widget> widgets = _buildColorGridRow();
-    
-    if (this._gameStatus == GameStatus.finished) {
-      // Do something
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Turns: ${this._currentTurn}"),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.restore),
-            onPressed: () => this._restartGame(),
-          ),
-        ],
-      ),
-      body: Center(
-        child: Container(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: widgets,
-          ),
-        ),
-      ),
-      bottomNavigationBar: ColorPalette(this._availableColors, this._updateColorGrid),
     );
   }
 }
