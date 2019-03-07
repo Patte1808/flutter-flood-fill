@@ -37,10 +37,11 @@ class GridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 800),
+      color: this.color,
       height: 25.0,
       width: 25.0,
-      color: color,
     );
   }
 }
@@ -77,10 +78,14 @@ class ColorGame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> widgets = _buildColorGridRow();
+    
+    if (this._gameStatus == GameStatus.finished) {
+      // Do something
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Status: $_gameStatus"),
+        title: Text("Turns: ${this._currentTurn}"),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.restore),
